@@ -8,6 +8,7 @@ import (
 
 const testVersion = 3
 
+// Convert convert a number to a string, the contents of which depend on the number's factors
 func Convert(num int) string {
 	var conv string
 	var check int
@@ -24,7 +25,6 @@ func Convert(num int) string {
 		check = 1
 	}
 	if check == 0 {
-		//conv = fmt.Sprint(num)
 		conv = strconv.FormatInt(int64(num), 10)
 	}
 	return conv

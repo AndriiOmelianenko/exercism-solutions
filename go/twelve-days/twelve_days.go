@@ -32,25 +32,30 @@ var gifts = []string{
 	"twelve Drummers Drumming",
 }
 
+// Song gives the whole song
 func Song() string {
 	var song string
 	for day := range days {
-		song += Verse(day+1) + "\n"
+		song += Verse(day + 1)
+		if day != len(days)-1 {
+			song += "\n"
+		}
 	}
 	return song
 }
 
+// Verse gives correct verse based on input day
 func Verse(day int) string {
 	var verse string
 	day--
-	verse += "On the " + days[day] + " day of Christmas my true love gave to me, "
+	verse += "On the " + days[day] + " day of Christmas my true love gave to me: "
 	if day == 0 {
 		verse += gifts[day] + "."
 	} else {
 		for gift := range gifts[:day+1] {
 			verse += gifts[day-gift]
 			if gift == day-1 {
-				verse += " and "
+				verse += ", and "
 			} else if gift == day {
 				continue
 			} else {

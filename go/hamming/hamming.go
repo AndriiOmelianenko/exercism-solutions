@@ -7,6 +7,7 @@ import (
 
 const testVersion = 6
 
+// Distance calculates the Hamming difference between two DNA strands
 func Distance(a, b string) (int, error) {
 	var counter int
 	if len(a) != len(b) {

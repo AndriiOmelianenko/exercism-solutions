@@ -6,8 +6,10 @@ import (
 
 const testVersion = 3
 
+// Kind is type
 type Kind int
 
+// NaT is iota
 const (
 	NaT Kind = iota // not a triangle
 	Equ             // equilateral
@@ -23,6 +25,7 @@ func isTriangle(a, b, c float64) bool {
 	return inBounds(a) && inBounds(b) && inBounds(c) && a+b >= c && b+c >= a && a+c >= b
 }
 
+// KindFromSides check if figure is triangle
 func KindFromSides(a, b, c float64) Kind {
 	if isTriangle(a, b, c) {
 		switch {

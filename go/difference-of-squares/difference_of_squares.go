@@ -2,7 +2,8 @@ package diffsquares
 
 const testVersion = 1
 
-func SquareOfSums(n int) int {
+// SquareOfSum calculates SquareOfSums
+func SquareOfSum(n int) int {
 	var square int
 	for i := 1; i <= n; i++ {
 		square += i
@@ -10,6 +11,7 @@ func SquareOfSums(n int) int {
 	return square * square
 }
 
+// SumOfSquares calculates SumOfSquares
 func SumOfSquares(n int) int {
 	var sum int
 	for i := 1; i <= n; i++ {
@@ -18,6 +20,7 @@ func SumOfSquares(n int) int {
 	return sum
 }
 
+// Difference calculates difference between SquareOfSums and SumOfSquares
 func Difference(n int) int {
-	return SquareOfSums(n) - SumOfSquares(n)
+	return SquareOfSum(n) - SumOfSquares(n)
 }

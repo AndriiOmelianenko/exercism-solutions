@@ -2,17 +2,19 @@ package clock
 
 import (
 	"reflect"
+	"strconv"
+	"strings"
 	"testing"
 )
 
-// Clock type API:
+// Clock API:
 //
+// type Clock                      // define the clock type
 // New(hour, minute int) Clock     // a "constructor"
 // (Clock) String() string         // a "stringer"
 // (Clock) Add(minutes int) Clock
+// (Clock) Subtract(minutes int) Clock
 //
-// The Add method should also handle subtraction by accepting negative values.
-
 // To satisfy the README requirement about clocks being equal, values of
 // your Clock type need to work with the == operator. This means that if your
 // New function returns a pointer rather than a value, your clocks will
@@ -26,14 +28,6 @@ import (
 //
 // For some useful guidelines on when to use a value receiver or a pointer
 // receiver see: https://github.com/golang/go/wiki/CodeReviewComments#receiver-type
-
-const targetTestVersion = 4
-
-func TestTestVersion(t *testing.T) {
-	if testVersion != targetTestVersion {
-		t.Fatalf("Found testVersion = %v, want %v", testVersion, targetTestVersion)
-	}
-}
 
 func TestCreateClock(t *testing.T) {
 	for _, n := range timeTests {
@@ -51,13 +45,55 @@ func TestAddMinutes(t *testing.T) {
 				a.h, a.m, a.a, got, a.want)
 		}
 	}
+	t.Log(len(addTests), "test cases")
+}
+
+func TestSubtractMinutes(t *testing.T) {
 	for _, a := range subtractTests {
-		if got := New(a.h, a.m).Add(a.a); got.String() != a.want {
-			t.Fatalf("New(%d, %d).Add(%d) = %q, want %q",
+		if got := New(a.h, a.m).Subtract(a.a); got.String() != a.want {
+			t.Fatalf("New(%d, %d).Subtract(%d) = %q, want %q",
 				a.h, a.m, a.a, got, a.want)
 		}
 	}
+	t.Log(len(subtractTests), "test cases")
+}
+
+func TestAddMinutesStringless(t *testing.T) {
+	for _, a := range addTests {
+		var wantHour, wantMin int
+		split := strings.SplitN(a.want, ":", 2)
+		if len(split) > 0 {
+			wantHour, _ = strconv.Atoi(split[0])
+		}
+		if len(split) > 1 {
+			wantMin, _ = strconv.Atoi(split[1])
+		}
+		want := New(wantHour, wantMin)
+		if got := New(a.h, a.m).Add(a.a); !reflect.DeepEqual(got, want) {
+			t.Fatalf("New(%d, %d).Add(%d) = %v, want %v",
+				a.h, a.m, a.a, got, want)
+		}
+	}
 	t.Log(len(addTests), "test cases")
+}
+
+func TestSubtractMinutesStringless(t *testing.T) {
+	for _, a := range subtractTests {
+		var wantHour, wantMin int
+		split := strings.SplitN(a.want, ":", 2)
+		if len(split) > 0 {
+			wantHour, _ = strconv.Atoi(split[0])
+		}
+		if len(split) > 1 {
+			wantMin, _ = strconv.Atoi(split[1])
+		}
+		want := New(wantHour, wantMin)
+		if got := New(a.h, a.m).Subtract(a.a); !reflect.DeepEqual(got, want) {
+			t.Fatalf("New(%d, %d).Subtract(%d) = %v, want %v",
+				a.h, a.m, a.a, got, want)
+		}
+	}
+	t.Log(len(subtractTests), "test cases")
 }
 
 func TestCompareClocks(t *testing.T) {
@@ -78,12 +114,38 @@ func TestCompareClocks(t *testing.T) {
 	t.Log(len(eqTests), "test cases")
 }
 
+func TestAddAndCompare(t *testing.T) {
+	clock1 := New(15, 45).Add(16)
+	clock2 := New(16, 1)
+	if !reflect.DeepEqual(clock1, clock2) {
+		t.Errorf("clock.New(15,45).Add(16) differs from clock.New(16,1)")
+	}
+}
+
+func TestSubtractAndCompare(t *testing.T) {
+	clock1 := New(16, 1).Subtract(16)
+	clock2 := New(15, 45)
+	if !reflect.DeepEqual(clock1, clock2) {
+		t.Errorf("clock.New(16,1).Subtract(16) differs from clock.New(15,45)")
+	}
+}
+
 func BenchmarkAddMinutes(b *testing.B) {
 	c := New(12, 0)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		for _, a := range addTests {
 			c.Add(a.a)
+		}
+	}
+}
+
+func BenchmarkSubtractMinutes(b *testing.B) {
+	c := New(12, 0)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		for _, a := range subtractTests {
+			c.Subtract(a.a)
 		}
 	}
 }

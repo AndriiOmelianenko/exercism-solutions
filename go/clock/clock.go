@@ -7,10 +7,12 @@ import (
 
 const testVersion = 4
 
+// Clock has hour and minute
 type Clock struct {
 	hour, minute int
 }
 
+// New creates new clock
 func New(hour, minute int) Clock {
 	hoursFromMinutes := minute / 60
 	minute = minute % 60
@@ -29,17 +31,12 @@ func (c Clock) String() string {
 	return fmt.Sprintf("%02v:%02v", c.hour, c.minute)
 }
 
+// Add adds minutes to your clock
 func (c Clock) Add(minutes int) Clock {
-	c.minute = c.minute + minutes
-	hoursFromMinutes := c.minute / 60
-	c.minute = c.minute % 60
-	c.hour = (c.hour + hoursFromMinutes) % 24
-	if c.minute < 0 {
-		c.minute = 60 + c.minute
-		c.hour = c.hour - 1
-	}
-	if c.hour < 0 {
-		c.hour = 24 + c.hour
-	}
-	return Clock{c.hour, c.minute}
+	return New(c.hour, c.minute+minutes)
+}
+
+// Subtract adds minutes to your clock
+func (c Clock) Subtract(minutes int) Clock {
+	return New(c.hour, c.minute-minutes)
 }

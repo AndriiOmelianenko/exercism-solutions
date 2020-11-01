@@ -3,6 +3,7 @@ package leap
 
 const testVersion = 3
 
+// IsLeapYear test if given year is a leap year or common year
 func IsLeapYear(year int) bool {
 	if year%4 == 0 { //on every year that is evenly divisible by 4
 		if year%100 == 0 { //except every year that is evenly divisible by 100

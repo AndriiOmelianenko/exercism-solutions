@@ -8,6 +8,7 @@ import (
 
 const testVersion = 4
 
+// AddGigasecond adds gigacecond to your time
 func AddGigasecond(myDate time.Time) time.Time {
 	return myDate.Add(time.Duration(math.Pow10(18)))
 }
